@@ -15,7 +15,7 @@ def create_app(conf={}):
 
     Bootstrap(app)
 
-    root = app.config['ROOT']
+    root = os.path.abspath(app.config['ROOT'])
     app.logger.debug("Serving root: '{}'".format(root))
 
     @app.route('/favicon.ico')
