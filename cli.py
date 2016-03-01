@@ -9,9 +9,12 @@ from app import main
 @click.option('-d', '--debug', is_flag=True, help='debug mode')
 def pydirl(root, port, address, debug):
     conf = {'ROOT': root,
-            'PORT': port,
-            'ADDRESS': address,
-            'DEBUG': debug}
+            'DEBUG': debug }
+    if port:
+        conf['PORT'] = port
+    if address:
+        conf['ADDRESS'] = address
+
     try:
         main(conf)
     except Exception as e:

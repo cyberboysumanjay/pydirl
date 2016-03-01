@@ -1,17 +1,30 @@
 import os
+import logging
 
 from flask import Flask, safe_join, send_file, render_template, abort
 from flask_bootstrap import Bootstrap
+
 from files_utils import get_file_size, get_file_mimetype, get_folder_size
+from tools import gevent_run, init_loggers
+
 
 def create_app(conf={}):
-    app = Flask(__name__)
+    app = Flask('pydirl')
     app.config.update(
         DEBUG=True,
+        ADDRESS='127.0.0.1',
+        PORT='5000',
         BOOTSTRAP_SERVE_LOCAL=True,
         ROOT=os.environ['PWD']
     )
+
     app.config.update(conf)
+
+    '''dirty trick: prevent default flask handler to be created
+      in flask version > 0.10.1 will be a nicer way to disable default loggers
+      tanks to this new code mitsuhiko/flask@84ad89ffa4390d3327b4d35983dbb4d84293b8e2
+    '''
+    app._logger = logging.getLogger(app.import_name)
 
     Bootstrap(app)
 
@@ -50,9 +63,14 @@ def create_app(conf={}):
 
 
 def main(conf={}):
+    init_loggers(logNames=['pydirl', 'werkzeug'],
+                 logLevel=logging.DEBUG if conf.get('DEBUG', False) else logging.INFO)
     app = create_app(conf)
-    app.run(host=conf.get('ADDRESS', None),
-            port=conf.get('PORT', None))
+    gevent_run(app,
+               address=app.config.get('ADDRESS'),
+               port=int(app.config.get('PORT')),
+               reloader=app.config.get('DEBUG'),
+               debugger=app.config.get('DEBUG'))
 
 
 if __name__ == "__main__":
