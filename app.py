@@ -9,11 +9,13 @@ def create_app(conf={}):
     app.config.update(
         DEBUG=True,
         BOOTSTRAP_SERVE_LOCAL=True,
+        ROOT=os.environ['PWD']
     )
+    app.config.update(conf)
 
     Bootstrap(app)
 
-    root = os.environ['PWD']
+    root = app.config['ROOT']
     app.logger.debug("Serving root: '{}'".format(root))
 
     @app.route('/favicon.ico')
@@ -47,6 +49,11 @@ def create_app(conf={}):
         return send_file(path)
 
 
+def main(conf={}):
+    app = create_app(conf)
+    app.run(host=conf.get('ADDRESS', None),
+            port=conf.get('PORT', None))
+
+
 if __name__ == "__main__":
-    app = create_app()
-    app.run(host='0.0.0.0')
+    main()
