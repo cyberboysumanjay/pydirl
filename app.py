@@ -11,12 +11,13 @@ from tools import gevent_run, init_loggers
 def create_app(conf={}):
     app = Flask('pydirl')
     app.config.update(
-        DEBUG=True,
-        ADDRESS='127.0.0.1',
-        PORT='5000',
-        BOOTSTRAP_SERVE_LOCAL=True,
-        ROOT=os.environ['PWD']
-    )
+            DEBUG=True,
+            ADDRESS='127.0.0.1',
+            PORT='5000',
+            BOOTSTRAP_SERVE_LOCAL=True,
+            ROOT=os.environ['PWD'],
+            FOLDER_SIZE=False
+        )
 
     app.config.update(conf)
 
@@ -46,7 +47,11 @@ def create_app(conf={}):
         for e in os.listdir(path):
             e_path = os.path.join(path, e)
             if os.path.isdir(e_path):
-                size, files_num = get_folder_size(e_path)
+                if app.config['FOLDER_SIZE']:
+                    size, files_num = get_folder_size(e_path)
+                else:
+                    size = None;
+                    files_num = None;
                 entries['dirs'][e] = {'size': size, 'files_num': files_num}
             elif os.path.isfile(e_path):
                 size = get_file_size(e_path)
