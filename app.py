@@ -39,6 +39,7 @@ def create_app(conf={}):
     @app.route('/<path:path>/')
     def folder_route(path):
         path = safe_join(root, path)
+        app.logger.debug("Absolute requested path: '{}'".format(path))
         if os.path.isfile(path):
             return send_file(path)
         entries = {'dirs':{}, 'files':{}}
@@ -54,12 +55,21 @@ def create_app(conf={}):
             else:
                 app.logger.debug('Skipping unknown element: {}'.format(e))
         return render_template('template.html', entries=entries)
-    return app
 
-    @app.route('/<path:path>')
+    #@app.route('/<path:path>')
     def file_route(path):
         path = safe_join(root, path)
         return send_file(path)
+
+    @app.errorhandler(OSError)
+    def oserror_handler(e):
+        if app.config['DEBUG']:
+            app.logger.exception(e)
+        else:
+            app.logger.error(e)
+        return render_template('error.html', message=e.strerror, code=403), 403
+
+    return app
 
 
 def main(conf={}):
