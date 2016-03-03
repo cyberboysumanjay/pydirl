@@ -1,3 +1,25 @@
 th.icon{
-width:0px;
+   width:0px;
+}
+
+th.toolbox{
+   width:0px;
+}
+
+th.size{
+   text-align: center;
+   width:0px;
+}
+
+td.size{
+   white-space:nowrap;
+   text-align:right;
+}
+
+td.toolbox a i{
+   color: hsl(0, 0%, 72%);
+}
+
+td.toolbox a i:hover{
+   color: hsl(0, 0%, 39%);
 }

@@ -1,11 +1,11 @@
 import os
 import logging
 
-from flask import Flask, safe_join, send_file, render_template, abort
+from flask import Flask, safe_join, send_file, render_template, abort, request
 from flask_bootstrap import Bootstrap
 
 from files_utils import get_file_size, get_file_mimetype, get_folder_size, get_mtime
-from tools import gevent_run, init_loggers
+from tools import gevent_run, init_loggers, stream_zipped_dir
 
 
 def create_app(conf={}):
@@ -42,8 +42,13 @@ def create_app(conf={}):
     def folder_route(relPath):
         path = safe_join(root, relPath)
         app.logger.debug("Absolute requested path: '{}'".format(path))
+
         if os.path.isfile(path):
             return send_file(path)
+        if os.path.isdir(path) and 'download' in request.args:
+            zipName = os.path.basename(path) if relPath else 'archive'
+            return stream_zipped_dir(path, zipName)
+
         entries = {'dirs':{}, 'files':{}}
         for e in os.listdir(path):
             e_path = os.path.join(path, e)

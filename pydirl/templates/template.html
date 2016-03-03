@@ -10,9 +10,12 @@
 <div class='container'>
     <table class='table table-codensed table-hover'>
         <thead>
+          <tr>
             <th class='icon'></th>
-            <th class='text-primary'>Name</th>
-            <th class='text-primary'>Size</th>
+            <th class='name text-primary'>Name</th>
+            <th class='size text-primary'>Size</th>
+            <th class='toolbox'></th>
+          </tr>
         </thead>
         <tbody></tbody>
     </table>
@@ -24,9 +27,15 @@
             <td class='icon'><i></i></td>
             <td class='name'><a></a></td>
             <td class='size'></td>
+            <td class='toolbox'></td>
         </tr>
     </table>
+
+    <a class='download-button'><i class='glyphicon glyphicon-download'></i></a>
+
 </div>
+
+
 {% endblock %}
 
 {% block scripts %}
