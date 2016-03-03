@@ -36,15 +36,10 @@ def create_app(conf={}):
     def favicon():
         abort(404)
 
-    #@app.route('/<path:path>')
-    def file_route(path):
-        path = safe_join(root, path)
-        return send_file(path)
-
-    @app.route('/', defaults={'path': ''})
-    @app.route('/<path:path>')
-    def folder_route(path):
-        path = safe_join(root, path)
+    @app.route('/', defaults={'relPath': ''})
+    @app.route('/<path:relPath>')
+    def folder_route(relPath):
+        path = safe_join(root, relPath)
         app.logger.debug("Absolute requested path: '{}'".format(path))
         if os.path.isfile(path):
             return send_file(path)
@@ -64,7 +59,7 @@ def create_app(conf={}):
                 entries['files'][e] = {'size': size, 'mime':mime}
             else:
                 app.logger.debug('Skipping unknown element: {}'.format(e))
-        return render_template('template.html', entries=entries)
+        return render_template('template.html', entries=entries, relPath=relPath)
 
     @app.errorhandler(OSError)
     def oserror_handler(e):
