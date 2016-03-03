@@ -1,0 +1,2 @@
+recursive-include pydirl/templates *
+recursive-include pydirl/static *
