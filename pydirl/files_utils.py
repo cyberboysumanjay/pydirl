@@ -1,4 +1,5 @@
 import os
+import zipstream
 import mimetypes
 from logging import getLogger
 
@@ -27,6 +28,14 @@ def get_folder_size(path):
 def get_mtime(path):
     return os.path.getmtime(path)
 
+
+def directory_to_zipstream(path):
+    z = zipstream.ZipFile(mode='w', compression=zipstream.ZIP_DEFLATED)
+    for root, dirs, files in os.walk(path):
+        for file in files:
+            absPath = os.path.join(root, file)
+            z.write(absPath, os.path.relpath(absPath, path))
+    return z
 
 def get_file_mimetype(path):
     return mimetypes.guess_type(path)[0]

@@ -1,4 +1,15 @@
 import logging
+from flask import Response
+from files_utils import directory_to_zipstream
+
+
+def stream_zipped_dir(path, zipname):
+    z = directory_to_zipstream(path)
+
+    response = Response(z, mimetype='application/zip')
+    response.headers['Content-Disposition'] = 'attachment; filename={}.{}'.format(zipname, 'zip')
+    return response
+
 
 def init_loggers(logLevel=logging.WARNING, logNames=None):
     streamHandler = logging.StreamHandler()
