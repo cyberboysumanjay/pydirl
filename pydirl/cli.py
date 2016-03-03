@@ -8,10 +8,12 @@ from app import main
 @click.option('-a', '--address', type=click.STRING, metavar="<address>", help='address to bind')
 @click.option('-d', '--debug', is_flag=True, help='debug mode')
 @click.option('--folder-size', is_flag=True, help='calculate size also for folders (WARNING: could become really slow)')
-def pydirl(root, port, address, debug, folder_size):
+@click.option('--last-modified', is_flag=True, help='display last modified time')
+def pydirl(root, port, address, debug, folder_size, last_modified):
     conf = {'ROOT': root,
             'DEBUG': debug,
-            'FOLDER_SIZE': folder_size}
+            'FOLDER_SIZE': folder_size,
+            'LAST_MODIFIED': last_modified}
     if port:
         conf['PORT'] = port
     if address:

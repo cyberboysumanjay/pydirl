@@ -4,7 +4,7 @@ import logging
 from flask import Flask, safe_join, send_file, render_template, abort
 from flask_bootstrap import Bootstrap
 
-from files_utils import get_file_size, get_file_mimetype, get_folder_size
+from files_utils import get_file_size, get_file_mimetype, get_folder_size, get_mtime
 from tools import gevent_run, init_loggers
 
 
@@ -16,7 +16,8 @@ def create_app(conf={}):
             PORT='5000',
             BOOTSTRAP_SERVE_LOCAL=True,
             ROOT=os.environ['PWD'],
-            FOLDER_SIZE=False
+            FOLDER_SIZE=False,
+            LAST_MODIFIED=False
         )
 
     app.config.update(conf)
@@ -46,17 +47,24 @@ def create_app(conf={}):
         entries = {'dirs':{}, 'files':{}}
         for e in os.listdir(path):
             e_path = os.path.join(path, e)
+            data=dict()
             if os.path.isdir(e_path):
                 if app.config['FOLDER_SIZE']:
                     size, files_num = get_folder_size(e_path)
                 else:
                     size = None;
                     files_num = None;
-                entries['dirs'][e] = {'size': size, 'files_num': files_num}
+                data['size'] = size;
+                data['file_num'] = files_num;
+                if app.config['LAST_MODIFIED']:
+                    data['mtime'] = get_mtime(e_path)
+                entries['dirs'][e] = data
             elif os.path.isfile(e_path):
-                size = get_file_size(e_path)
-                mime = get_file_mimetype(e_path)
-                entries['files'][e] = {'size': size, 'mime':mime}
+                data['size'] = get_file_size(e_path)
+                data['mime'] = get_file_mimetype(e_path)
+                if app.config['LAST_MODIFIED']:
+                    data['mtime'] = get_mtime(path)
+                entries['files'][e] = data
             else:
                 app.logger.debug('Skipping unknown element: {}'.format(e))
         return render_template('template.html', entries=entries, relPath=relPath)

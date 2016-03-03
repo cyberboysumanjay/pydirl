@@ -23,5 +23,10 @@ def get_folder_size(path):
                     logger.exception(e)
     return size, files_num
 
+
+def get_mtime(path):
+    return os.path.getmtime(path)
+
+
 def get_file_mimetype(path):
     return mimetypes.guess_type(path)[0]
