@@ -5,11 +5,14 @@ function populate_table(entries){
     //dirs
     dirs = entries['dirs']
     for( var dir in dirs ){
-        h_size = human_readable_size(dirs[dir]['size'])
+        if(dirs[dir]['size'] === null)
+            h_size = '-'
+        else
+            h_size = human_readable_size(dirs[dir]['size'])
         append_table_element(dir,
                              dir+'/',
                              'glyphicon glyphicon-folder-open',
-                             h_size[0] + h_size[1]);
+                             h_size);
     }
 
     //files
@@ -19,7 +22,7 @@ function populate_table(entries){
         append_table_element(file,
                              file,
                              'glyphicon glyphicon-unchecked',
-                             h_size[0] + h_size[1]);
+                             h_size);
     }
 }
 
@@ -40,8 +43,8 @@ function human_readable_size(byte_size){
         suffix_idx++;
         size = size / 1024;
     }
-    size = Math.round(size * 100) / 100
-    return [size, suffix[suffix_idx]]
+    size = Math.round(size * 100) / 100;
+    return size+' '+suffix[suffix_idx];
 }
 
 
