@@ -5,9 +5,9 @@ from app import main
 @click.version_option()
 @click.argument('root', type=click.Path(), metavar='[PATH]', default='./', required=False)
 @click.option('-p', '--port', type=click.IntRange(min=1, max=65535), metavar="<port>", help='listening port')
-@click.option('-a', '--address', type=click.STRING, metavar="<address>", help='adress to bind')
+@click.option('-a', '--address', type=click.STRING, metavar="<address>", help='address to bind')
 @click.option('-d', '--debug', is_flag=True, help='debug mode')
-@click.option('--folder-size', is_flag=True, help='calculate size also for folders (WARNING: could became really slow)')
+@click.option('--folder-size', is_flag=True, help='calculate size also for folders (WARNING: could become really slow)')
 def pydirl(root, port, address, debug, folder_size):
     conf = {'ROOT': root,
             'DEBUG': debug,
