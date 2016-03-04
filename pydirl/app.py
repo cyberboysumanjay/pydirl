@@ -12,7 +12,7 @@ def create_app(conf={}):
     app = Flask('pydirl')
     app.config.update(
             DEBUG=True,
-            ADDRESS='127.0.0.1',
+            ADDRESS='0.0.0.0',
             PORT='5000',
             BOOTSTRAP_SERVE_LOCAL=True,
             ROOT=os.environ['PWD'],
