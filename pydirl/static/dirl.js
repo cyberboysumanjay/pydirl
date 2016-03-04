@@ -27,16 +27,16 @@ function populate_table(entries){
     }
 }
 
-function append_table_element(name, url, icon_class, size=null, downloadUrl=null){
+function append_table_element(name, url, icon_class, size, downloadUrl){
     var row = $('#template #table-row tr').first().clone();
     row.find('.icon i').first().addClass(icon_class)
     row_name = row.find('.name a').first();
     row_name.text(name);
     row_name.attr('href', url);
-    if(size !== null)
+    if(size)
         row.find('.size').first().text(size);
     console.log(downloadUrl)
-    if(downloadUrl != null){
+    if(downloadUrl){
         download_button = $('#template a.download-button').first().clone();
         download_button.attr('href', downloadUrl)
         download_button.appendTo(row.find('.toolbox'))
