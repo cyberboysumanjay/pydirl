@@ -37,7 +37,7 @@ def directory_to_zipstream(path):
             if not os.path.exists(absPath):
                 logger.debug('Skipping non existing element: {}'.format(absPath))
                 continue
-	    if not (os.path.isfile(absPath) or os.path.isdir(absPath)):
+            if not (os.path.isfile(absPath) or os.path.isdir(absPath)):
                 logger.debug('Skipping unknown element: {}'.format(absPath))
                 continue
             z.write(absPath, os.path.relpath(absPath, path))

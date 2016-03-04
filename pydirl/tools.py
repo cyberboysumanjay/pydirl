@@ -1,6 +1,6 @@
 import logging
 from flask import Response
-from files_utils import directory_to_zipstream
+from .files_utils import directory_to_zipstream
 
 logger = logging.getLogger('pydirl')
 
@@ -16,7 +16,7 @@ def init_loggers(logLevel=logging.WARNING, logNames=None):
     formatter = logging.Formatter(
         '%(asctime)s [%(name)s] [%(levelname)s] %(message)s')
     streamHandler.setFormatter(formatter)
-    loggers = map(logging.getLogger, logNames)
+    loggers = list(map(logging.getLogger, logNames))
     for logger in loggers:
         logger.setLevel(logLevel)
         if not logger.handlers:

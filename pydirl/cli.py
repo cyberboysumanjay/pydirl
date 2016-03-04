@@ -1,5 +1,5 @@
 import click
-from app import main
+from .app import main
 
 @click.command(context_settings={"auto_envvar_prefix":"PYDIRL"})
 @click.version_option()

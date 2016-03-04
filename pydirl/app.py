@@ -4,8 +4,8 @@ import logging
 from flask import Flask, safe_join, send_file, render_template, abort, request
 from flask_bootstrap import Bootstrap
 
-from files_utils import get_file_size, get_file_mimetype, get_folder_size, get_mtime
-from tools import gevent_run, init_loggers, stream_zipped_dir
+from .files_utils import get_file_size, get_file_mimetype, get_folder_size, get_mtime
+from .tools import gevent_run, init_loggers, stream_zipped_dir
 
 
 def create_app(conf={}):
