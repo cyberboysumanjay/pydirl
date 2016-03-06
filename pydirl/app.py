@@ -15,7 +15,7 @@ def create_app(conf={}):
             ADDRESS='0.0.0.0',
             PORT='5000',
             BOOTSTRAP_SERVE_LOCAL=True,
-            ROOT=os.environ['PWD'],
+            ROOT=os.curdir,
             FOLDER_SIZE=False,
             LAST_MODIFIED=False
         )
@@ -30,8 +30,9 @@ def create_app(conf={}):
 
     Bootstrap(app)
 
-    root = os.path.abspath(app.config['ROOT'])
-    app.logger.debug("Serving root: '{}'".format(root))
+    app.root = os.path.abspath(app.config['ROOT'])
+    app.logger.debug("Serving root: '{0}'".format(app.root))
+
 
     @app.route('/favicon.ico')
     def favicon():
@@ -40,8 +41,8 @@ def create_app(conf={}):
     @app.route('/', defaults={'relPath': ''})
     @app.route('/<path:relPath>')
     def folder_route(relPath):
-        path = safe_join(root, relPath)
-        app.logger.debug("Absolute requested path: '{}'".format(path))
+        path = safe_join(app.root, relPath)
+        app.logger.debug("Absolute requested path: '{0}'".format(path))
 
         if os.path.isfile(path):
             return send_file(path)
