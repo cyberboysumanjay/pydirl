@@ -73,7 +73,8 @@ def create_app(conf={}):
                 entries['files'][e] = data
             else:
                 app.logger.debug('Skipping unknown element: {}'.format(e))
-        return render_template('template.html', entries=entries, relPath=relPath)
+        relDirs = [ f for f in relPath.split(os.sep) if f ]
+        return render_template('template.html', entries=entries, relDirs=relDirs)
 
     @app.errorhandler(OSError)
     def oserror_handler(e):

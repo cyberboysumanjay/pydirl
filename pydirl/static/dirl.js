@@ -47,7 +47,6 @@ function append_table_element(name, url, icon_class, size, downloadUrl){
     row_name.attr('href', url);
     if(size)
         row.find('.size').first().text(size);
-    console.log(downloadUrl)
     if(downloadUrl){
         download_button = $('#template a.download-button').first().clone();
         download_button.attr('href', downloadUrl)
@@ -71,9 +70,32 @@ function show_message(msg, alert_class){
     if (alert_class === undefined)
         alert_class = 'alert-warning';
     var row = $('#template #alert-message').first().clone();
-    row.find('div .alert').first().addClass(alert_class);
+    row.find('div.alert').first().addClass(alert_class);
     row.find('p').first().text(msg);
     $('table').replaceWith(row);
 }
 
+function populate_breadcrumb(relDirs){
+    function lidir(href, dirName){
+        return '<li><a href="'+href+'">'+dirName+'</a></li>';
+    }
+    var breadcrumb = $('ol.breadcrumb').first();
+    var currHref = '/';
+    var currDir = 'Home';
+    breadcrumb.append(lidir(currHref, currDir));
+    if(relDirs.length === 0)
+        breadcrumb.append(' <a class="download-button" href="/?download=True"><i class="glyphicon glyphicon-download"></i></a>')
+    else{
+        for (var i = 0; i < relDirs.length; i++) {
+            dir = relDirs[i];
+            currHref += (dir + '/');
+            if(i === relDirs.length-1)
+                breadcrumb.append('<li class="active">'+dir+'</li>');
+            else
+                breadcrumb.append(lidir(currHref, dir))
+        }
+    }
+}
+
+populate_breadcrumb(relDirs);
 populate_table(entries);

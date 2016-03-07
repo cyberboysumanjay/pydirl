@@ -16,11 +16,11 @@ td.size{
    text-align:right;
 }
 
-td.toolbox a i{
+a.download-button i{
    color: hsl(0, 0%, 72%);
 }
 
-td.toolbox a i:hover{
+a.download-button i:hover{
    color: hsl(0, 0%, 39%);
 }
 
