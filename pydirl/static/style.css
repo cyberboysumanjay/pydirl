@@ -23,3 +23,7 @@ td.toolbox a i{
 td.toolbox a i:hover{
    color: hsl(0, 0%, 39%);
 }
+
+#alert-message{
+    margin-top: 37px;
+}
