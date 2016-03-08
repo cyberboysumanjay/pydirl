@@ -34,7 +34,6 @@ def create_app(conf={}):
     app.root = os.path.abspath(app.config['ROOT'])
     app.logger.debug("Serving root: '{0}'".format(app.root))
 
-
     @app.route('/favicon.ico')
     def favicon():
         abort(404)
@@ -51,18 +50,18 @@ def create_app(conf={}):
             zipName = os.path.basename(path) if relPath else 'archive'
             return stream_zipped_dir(path, zipName)
 
-        entries = {'dirs':{}, 'files':{}}
+        entries = {'dirs': {}, 'files': {}}
         for e in os.listdir(path):
             e_path = os.path.join(path, e)
-            data=dict()
+            data = dict()
             if os.path.isdir(e_path):
                 if app.config['FOLDER_SIZE']:
                     size, files_num = get_folder_size(e_path)
                 else:
-                    size = None;
-                    files_num = None;
-                data['size'] = size;
-                data['file_num'] = files_num;
+                    size = None
+                    files_num = None
+                data['size'] = size
+                data['file_num'] = files_num
                 if app.config['LAST_MODIFIED']:
                     data['mtime'] = get_mtime(e_path)
                 entries['dirs'][e] = data
@@ -74,7 +73,7 @@ def create_app(conf={}):
                 entries['files'][e] = data
             else:
                 app.logger.debug('Skipping unknown element: {}'.format(e))
-        relDirs = [ f for f in relPath.split(os.sep) if f ]
+        relDirs = [f for f in relPath.split(os.sep) if f]
         return render_template('template.html', entries=entries, relPath=relPath, relDirs=relDirs)
 
     @app.errorhandler(OSError)

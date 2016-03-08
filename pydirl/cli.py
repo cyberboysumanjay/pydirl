@@ -1,7 +1,8 @@
 import click
 from .app import main
 
-@click.command(context_settings={"auto_envvar_prefix":"PYDIRL"})
+
+@click.command(context_settings={"auto_envvar_prefix": "PYDIRL"})
 @click.version_option()
 @click.argument('root', type=click.Path(), metavar='[PATH]', default='./', required=False)
 @click.option('-p', '--port', type=click.IntRange(min=1, max=65535), metavar="<port>", help='listening port')
