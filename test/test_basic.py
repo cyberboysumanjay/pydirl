@@ -1,13 +1,37 @@
 import unittest
+import shutil
+import tempfile
 from pydirl.app import create_app
-
+from . import populate_directory
 
 class PydirlTestCase(unittest.TestCase):
 
     def setUp(self):
-        app = create_app()
+        self.root = tempfile.mkdtemp(prefix='pydirl_test_')
+        populate_directory(self.root)
+        app = create_app({'ROOT': self.root})
         self.app = app.test_client()
+
+    def tearDown(self):
+        shutil.rmtree(self.root)
 
     def test_root(self):
         rsp = self.app.get('/')
         self.assertEqual(rsp.status_code, 200)
+
+    def test_download_root(self):
+        rsp = self.app.get('/?dowload=true')
+        self.assertEqual(rsp.status_code, 200)
+
+    def test_download_2_level_file(self):
+        rsp = self.app.get('/1/1-1/1-1.txt')
+        self.assertEqual(rsp.status_code, 200)
+        self.assertEqual(rsp.data, b'standard-content 1-1')
+
+    def test_req_empty_folder(self):
+        rsp = self.app.get('empty')
+        self.assertEqual(rsp.status_code, 200)
+
+    def test_req_notexisting_folder(self):
+        rsp = self.app.get('empty/notexists')
+        self.assertEqual(rsp.status_code, 404)
