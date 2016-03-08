@@ -1,5 +1,6 @@
 import os
 import logging
+import errno
 
 from flask import Flask, safe_join, send_file, render_template, abort, request
 from flask_bootstrap import Bootstrap
@@ -82,7 +83,16 @@ def create_app(conf={}):
             app.logger.exception(e)
         else:
             app.logger.error(e)
-        return render_template('error.html', message=e.strerror, code=403), 403
+
+        if e.errno == errno.ENOENT:
+            # no such file or directory
+            errCode = 404
+        elif e.errno == errno.EACCES:
+            # permission denied
+            errCode = 403
+        else:
+            errCode = 500
+        return render_template('error.html', message=e.strerror, code=errCode), errCode
 
     return app
 
