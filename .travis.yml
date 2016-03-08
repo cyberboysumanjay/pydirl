@@ -7,9 +7,17 @@ python:
   - "3.4"
   - "3.5"
 
+env:
+  - TEST_SUITE=nose
+
+matrix:
+    include:
+        - python: 2.7
+          env: TEST_SUITE=flake
 install:
-  - python setup.py install
+  - '[[ $TEST_SUITE == flake ]] && pip install flake8 || true'
+  - '[[ $TEST_SUITE == nose ]] && python setup.py install || true'
 
 script:
-  - nosetests
-
+  - '[[ $TEST_SUITE == flake ]] && flake8 pydirl || true'
+  - '[[ $TEST_SUITE == nose ]] && nosetests || true'
