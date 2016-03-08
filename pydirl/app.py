@@ -74,7 +74,7 @@ def create_app(conf={}):
             else:
                 app.logger.debug('Skipping unknown element: {}'.format(e))
         relDirs = [ f for f in relPath.split(os.sep) if f ]
-        return render_template('template.html', entries=entries, relDirs=relDirs)
+        return render_template('template.html', entries=entries, relPath=relPath, relDirs=relDirs)
 
     @app.errorhandler(OSError)
     def oserror_handler(e):
