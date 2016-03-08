@@ -7,10 +7,11 @@ from .app import main
 @click.argument('root', type=click.Path(), metavar='[PATH]', default='./', required=False)
 @click.option('-p', '--port', type=click.IntRange(min=1, max=65535), metavar="<port>", help='listening port')
 @click.option('-a', '--address', type=click.STRING, metavar="<address>", help='address to bind')
+@click.option('--exclude', type=click.STRING, metavar="<regex>", help='regex to exclude matching files and directories')
 @click.option('-d', '--debug', is_flag=True, help='debug mode')
 @click.option('--folder-size', is_flag=True, help='calculate size also for folders (WARNING: could become really slow)')
 @click.option('--last-modified', is_flag=True, help='display last modified time')
-def pydirl(root, port, address, debug, folder_size, last_modified):
+def pydirl(root, port, address, exclude, debug, folder_size, last_modified):
     conf = {'ROOT': root,
             'DEBUG': debug,
             'FOLDER_SIZE': folder_size,
@@ -19,6 +20,8 @@ def pydirl(root, port, address, debug, folder_size, last_modified):
         conf['PORT'] = port
     if address:
         conf['ADDRESS'] = address
+    if exclude:
+        conf['EXCLUDE'] = exclude
 
     try:
         main(conf)

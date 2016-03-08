@@ -1,6 +1,7 @@
 import os
 import logging
 import errno
+import re
 
 from flask import Flask, safe_join, send_file, render_template, \
         abort, request, redirect
@@ -16,6 +17,7 @@ def create_app(conf={}):
             DEBUG=True,
             ADDRESS='0.0.0.0',
             PORT='5000',
+            EXCLUDE=None,
             BOOTSTRAP_SERVE_LOCAL=True,
             ROOT=os.curdir,
             FOLDER_SIZE=False,
@@ -35,6 +37,11 @@ def create_app(conf={}):
     app.root = os.path.abspath(app.config['ROOT'])
     app.logger.debug("Serving root: '{0}'".format(app.root))
 
+    app.exclude = None
+    if app.config['EXCLUDE']:
+        app.exclude = re.compile(app.config['EXCLUDE'])
+        app.logger.debug("Excluding files matching expression: '{0}'".format(app.config['EXCLUDE']))
+
     @app.route('/favicon.ico')
     def favicon():
         abort(404)
@@ -42,8 +49,14 @@ def create_app(conf={}):
     @app.route('/', defaults={'relPath': ''})
     @app.route('/<path:relPath>')
     def folder_route(relPath):
+
         path = safe_join(app.root, relPath)
         app.logger.debug("Absolute requested path: '{0}'".format(path))
+
+        app.logger.debug(app.exclude)
+        if app.exclude and app.exclude.match(relPath):
+            app.logger.debug("Requested path matches exclude expression")
+            abort(404)
 
         if os.path.isfile(path):
             return send_file(path)
@@ -58,6 +71,11 @@ def create_app(conf={}):
         entries = {'dirs': {}, 'files': {}}
         for e in os.listdir(path):
             e_path = os.path.join(path, e)
+
+            if app.exclude and (app.exclude.match(e) or os.path.isdir(e_path) and app.exclude.match(e + os.sep)):
+                app.logger.debug("Excluding element: '{0}'".format(e))
+                continue
+
             if os.path.isdir(e_path):
                 entries['dirs'][e] = get_folder_infos(e_path, recursive=app.config['FOLDER_SIZE'])
             elif os.path.isfile(e_path):
