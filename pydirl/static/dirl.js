@@ -34,6 +34,8 @@ function populate_table(entries){
     if ((n_dirs + n_files) === 0){
        console.log('The folder is empty folder');
        show_message('This folder is empty');
+    }else{
+        populate_stats(n_dirs, n_files);
     }
     console.log('Number of folders: '+ n_dirs);
     console.log('Number of files: '+ n_files);
@@ -97,5 +99,21 @@ function populate_breadcrumb(relDirs){
     }
 }
 
+function populate_stats(n_dirs, n_files){
+    var dirsStat = '';
+    var filesStat = '';
+    var sep = '';
+    if(n_dirs == 1)
+        dirsStat = '1 folder';
+    else if(n_dirs > 1)
+        dirsStat = n_dirs + " folders";
+    if(n_files == 1)
+        filesStat = '1 file';
+    else if(n_files > 1)
+        filesStat = n_files + " files";
+    if(n_dirs > 0 && n_files > 0)
+        sep = ', '
+    $('p#directory-stats small').first().text(dirsStat + sep + filesStat);
+}
 populate_breadcrumb(relDirs);
 populate_table(entries);
