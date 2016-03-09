@@ -12,6 +12,18 @@ from .app import main
 @click.option('--folder-size', is_flag=True, help='calculate size also for folders (WARNING: could become really slow)')
 @click.option('--last-modified', is_flag=True, help='display last modified time')
 def pydirl(root, port, address, exclude, debug, folder_size, last_modified):
+    '''Quick file sharing solution
+
+       Start a simple web server to share files and folders over HTTP protocol.
+
+      \b
+       PATH controls which elements will be shared:
+        - if PATH is a directory, all elements under it will be shared.
+        - if PATH is a file, single-file mode will be triggered and
+          only that file will be shared.
+        - if PATH is not given the current directory (PWD) will be used.
+    '''
+
     conf = {'ROOT': root,
             'DEBUG': debug,
             'FOLDER_SIZE': folder_size,

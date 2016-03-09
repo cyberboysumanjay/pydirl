@@ -48,14 +48,21 @@ def create_app(conf={}):
 
     @app.route('/', defaults={'relPath': ''})
     @app.route('/<path:relPath>')
-    def folder_route(relPath):
-
+    def general_route(relPath):
         path = safe_join(app.root, relPath)
         app.logger.debug("Absolute requested path: '{0}'".format(path))
 
         if app.exclude and app.exclude.match(relPath):
             app.logger.debug("Requested path matches exclude expression")
             abort(404)
+
+        # check for single-file-mode
+        if os.path.isfile(app.root):
+            app.logger.debug('Single file mode triggered')
+            singleFileName = os.path.basename(app.root)
+            if relPath != singleFileName:
+                return redirect(singleFileName, code=302)
+            return send_file(app.root)
 
         if os.path.isfile(path):
             return send_file(path)
