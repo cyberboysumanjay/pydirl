@@ -15,9 +15,9 @@ matrix:
         - python: 2.7
           env: TEST_SUITE=flake
 install:
-  - '[[ $TEST_SUITE == flake ]] && pip install flake8 || true'
-  - '[[ $TEST_SUITE == nose ]] && python setup.py install || true'
+  - 'if [[ $TEST_SUITE == flake ]] ; then pip install flake8; return $?; fi'
+  - 'if [[ $TEST_SUITE == nose ]] ; then python setup.py install; return $?; fi'
 
 script:
-  - '[[ $TEST_SUITE == flake ]] && flake8 pydirl || true'
-  - '[[ $TEST_SUITE == nose ]] && nosetests || true'
+  - 'if [[ $TEST_SUITE == flake ]] ; then flake8 pydirl; return $?; fi'
+  - 'if [[ $TEST_SUITE == nose ]] ; then nosetests; return $?; fi'
