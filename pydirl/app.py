@@ -69,7 +69,7 @@ def create_app(conf={}):
         else:
             app.logger.error(e)
 
-        if e.errno == errno.ENOENT:
+        if e.errno in [errno.ENOENT, errno.ENOTDIR]:
             # no such file or directory
             errCode = 404
         elif e.errno == errno.EACCES:

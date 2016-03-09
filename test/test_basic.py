@@ -32,6 +32,19 @@ class PydirlTestCase(unittest.TestCase):
         rsp = self.app.get('empty')
         self.assertEqual(rsp.status_code, 200)
 
-    def test_req_notexisting_folder(self):
-        rsp = self.app.get('empty/notexists')
+    def test_req_notexisting_folder_depth_1(self):
+        rsp = self.app.get('empty/notexists/')
+        self.assertEqual(rsp.status_code, 404)
+
+    def test_req_notexisting_folder_depth_3(self):
+        rsp = self.app.get('empty/notexists/not2/not3/')
+        self.assertEqual(rsp.status_code, 404)
+
+    def test_req_notexisting_folder_with_existing_prefix(self):
+        ''' Ask a path that as a prefix that match an existing file
+
+            os.listdir in this case should raise OSError with ENOTDIR and not with the
+            standard ENOENT
+        '''
+        rsp = self.app.get('/1/1-1/1-1.txt/asd/notexists1/notexists2/notexists3/')
         self.assertEqual(rsp.status_code, 404)
