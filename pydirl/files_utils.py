@@ -48,3 +48,38 @@ def directory_to_zipstream(path):
 
 def get_file_mimetype(path):
     return mimetypes.guess_type(path)[0]
+
+
+def get_file_infos(path):
+    '''Collect and return file infos as a dict
+
+        - size in bytes (`size`)
+        - mimetype (`mime`)
+        - last modified time (`mtime`)
+    '''
+    infos = dict()
+    infos['size'] = get_file_size(path)
+    infos['mime'] = get_file_mimetype(path)
+    infos['mtime'] = get_mtime(path)
+    return infos
+
+
+def get_folder_infos(path, recursive=False):
+    '''Collect and return folder infos as a dict
+
+       :param path: path of the folder to analyze
+       :param recursive: calculate infos that requires recursive
+                         access:
+                            - folder size (`size`)
+                            - number of files (`files_num`).
+    '''
+    infos = dict()
+    if recursive:
+        size, files_num = get_folder_size(path)
+    else:
+        size = None
+        files_num = None
+    infos['size'] = size
+    infos['file_num'] = files_num
+    infos['mtime'] = get_mtime(path)
+    return infos
