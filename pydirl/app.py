@@ -20,9 +20,7 @@ def create_app(conf={}):
             EXCLUDE=None,
             BOOTSTRAP_SERVE_LOCAL=True,
             ROOT=os.curdir,
-            FOLDER_SIZE=False,
-            LAST_MODIFIED=False
-        )
+            FOLDER_SIZE=False)
 
     app.config.update(conf)
 

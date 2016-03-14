@@ -10,8 +10,7 @@ from .app import main
 @click.option('--exclude', type=click.STRING, metavar="<regex>", help='regex to exclude matching files and directories')
 @click.option('-d', '--debug', is_flag=True, help='debug mode')
 @click.option('--folder-size', is_flag=True, help='calculate size also for folders (WARNING: could become really slow)')
-@click.option('--last-modified', is_flag=True, help='display last modified time')
-def pydirl(root, port, address, exclude, debug, folder_size, last_modified):
+def pydirl(root, port, address, exclude, debug, folder_size):
     '''Quick file sharing solution
 
        Start a simple web server to share files and folders over HTTP protocol.
@@ -26,8 +25,7 @@ def pydirl(root, port, address, exclude, debug, folder_size, last_modified):
 
     conf = {'ROOT': root,
             'DEBUG': debug,
-            'FOLDER_SIZE': folder_size,
-            'LAST_MODIFIED': last_modified}
+            'FOLDER_SIZE': folder_size}
     if port:
         conf['PORT'] = port
     if address:
