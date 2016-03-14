@@ -16,7 +16,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
-    entry_points={'console_scripts': [ 'pydirl=pydirl.cli:pydirl']},
+    entry_points={'console_scripts': ['pydirl=pydirl.cli:pydirl']},
     classifiers=[
         'Development Status :: 4 - Beta',
         'Framework :: Flask',

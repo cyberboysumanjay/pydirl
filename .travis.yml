@@ -19,5 +19,5 @@ install:
   - 'if [[ $TEST_SUITE == nose ]] ; then python setup.py install; return $?; fi'
 
 script:
-  - 'if [[ $TEST_SUITE == flake ]] ; then flake8 pydirl; return $?; fi'
+  - 'if [[ $TEST_SUITE == flake ]] ; then flake8; return $?; fi'
   - 'if [[ $TEST_SUITE == nose ]] ; then nosetests; return $?; fi'
