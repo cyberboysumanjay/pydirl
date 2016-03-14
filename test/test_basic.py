@@ -30,8 +30,22 @@ class PydirlTestCase(unittest.TestCase):
         self.assertEqual(rsp.data, b'standard-content 1-1')
 
     def test_req_empty_folder(self):
-        rsp = self.app.get('empty')
+        rsp = self.app.get('empty/')
         self.assertEqual(rsp.status_code, 200)
+
+    def test_direct_on_folder(self):
+        '''Redirect when an existing folder
+           is requested without the trailing slash
+        '''
+        rsp = self.app.get('empty')
+        self.assertEqual(rsp.status_code, 302)
+
+    def test_not_redirect_on_folder(self):
+        '''Not redirect when a not existing folder
+           is requested without the trailing slash
+        '''
+        rsp = self.app.get('empty/notexists')
+        self.assertEqual(rsp.status_code, 404)
 
     def test_req_notexisting_folder_depth_1(self):
         rsp = self.app.get('empty/notexists/')

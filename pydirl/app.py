@@ -2,7 +2,8 @@ import os
 import logging
 import errno
 
-from flask import Flask, safe_join, send_file, render_template, abort, request
+from flask import Flask, safe_join, send_file, render_template, \
+        abort, request, redirect
 from flask_bootstrap import Bootstrap
 
 from .files_utils import get_folder_infos, get_file_infos
@@ -46,9 +47,13 @@ def create_app(conf={}):
 
         if os.path.isfile(path):
             return send_file(path)
-        if os.path.isdir(path) and 'download' in request.args:
-            zipName = os.path.basename(path) if relPath else 'archive'
-            return stream_zipped_dir(path, zipName)
+
+        if os.path.isdir(path):
+            if relPath and relPath[-1] != '/':
+                return redirect(relPath + '/', code=302)
+            elif 'download' in request.args:
+                zipName = os.path.basename(path) if relPath else 'archive'
+                return stream_zipped_dir(path, zipName)
 
         entries = {'dirs': {}, 'files': {}}
         for e in os.listdir(path):
