@@ -53,7 +53,6 @@ def create_app(conf={}):
         path = safe_join(app.root, relPath)
         app.logger.debug("Absolute requested path: '{0}'".format(path))
 
-        app.logger.debug(app.exclude)
         if app.exclude and app.exclude.match(relPath):
             app.logger.debug("Requested path matches exclude expression")
             abort(404)
