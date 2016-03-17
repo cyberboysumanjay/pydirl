@@ -8,6 +8,8 @@
 
 {% block content %}
 <div class='container'>
+    <ol class="breadcrumb">
+    </ol>
     <table class='table table-codensed table-hover'>
         <thead>
           <tr>
@@ -19,7 +21,12 @@
         </thead>
         <tbody></tbody>
     </table>
-</div>
+    <div class='row'>
+        <div class='col-xs-6'>
+            <p class="text-left" id='directory-stats'><small></small></p>
+        </div>
+    </div>
+ </div>
 
 <div id='template' hidden>
     <table id='table-row'>
@@ -33,6 +40,14 @@
 
     <a class='download-button'><i class='glyphicon glyphicon-download'></i></a>
 
+    <div class='row' id='alert-message'>
+        <div class='col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6'>
+            <div class='alert' role='alert'>
+                <p class='text-center'></p>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 
@@ -42,6 +57,7 @@
 {{super()}}
     <script type=text/javascript>
         var entries = {{ entries|tojson|safe }};
+        var relDirs = {{ relDirs|tojson|safe }};
     </script>
     <script src="{{url_for('.static', filename='dirl.js')}}" type=text/javascript></script>
 {% endblock %}

@@ -1,10 +1,13 @@
 import os
 import logging
+import errno
+import re
 
-from flask import Flask, safe_join, send_file, render_template, abort, request
+from flask import Flask, safe_join, send_file, render_template, \
+        abort, request, redirect
 from flask_bootstrap import Bootstrap
 
-from .files_utils import get_file_size, get_file_mimetype, get_folder_size, get_mtime
+from .files_utils import get_folder_infos, get_file_infos
 from .tools import gevent_run, init_loggers, stream_zipped_dir
 
 
@@ -14,11 +17,10 @@ def create_app(conf={}):
             DEBUG=True,
             ADDRESS='0.0.0.0',
             PORT='5000',
+            EXCLUDE=None,
             BOOTSTRAP_SERVE_LOCAL=True,
             ROOT=os.curdir,
-            FOLDER_SIZE=False,
-            LAST_MODIFIED=False
-        )
+            FOLDER_SIZE=False)
 
     app.config.update(conf)
 
@@ -33,6 +35,10 @@ def create_app(conf={}):
     app.root = os.path.abspath(app.config['ROOT'])
     app.logger.debug("Serving root: '{0}'".format(app.root))
 
+    app.exclude = None
+    if app.config['EXCLUDE']:
+        app.exclude = re.compile(app.config['EXCLUDE'])
+        app.logger.debug("Excluding files matching expression: '{0}'".format(app.config['EXCLUDE']))
 
     @app.route('/favicon.ico')
     def favicon():
@@ -40,40 +46,48 @@ def create_app(conf={}):
 
     @app.route('/', defaults={'relPath': ''})
     @app.route('/<path:relPath>')
-    def folder_route(relPath):
+    def general_route(relPath):
         path = safe_join(app.root, relPath)
         app.logger.debug("Absolute requested path: '{0}'".format(path))
 
+        if app.exclude and app.exclude.match(relPath):
+            app.logger.debug("Requested path matches exclude expression")
+            abort(404)
+
+        # check for single-file-mode
+        if os.path.isfile(app.root):
+            app.logger.debug('Single file mode triggered')
+            singleFileName = os.path.basename(app.root)
+            if relPath != singleFileName:
+                return redirect(singleFileName, code=302)
+            return send_file(app.root)
+
         if os.path.isfile(path):
             return send_file(path)
-        if os.path.isdir(path) and 'download' in request.args:
-            zipName = os.path.basename(path) if relPath else 'archive'
-            return stream_zipped_dir(path, zipName)
 
-        entries = {'dirs':{}, 'files':{}}
+        if os.path.isdir(path):
+            if relPath and relPath[-1] != '/':
+                return redirect(relPath + '/', code=302)
+            elif 'download' in request.args:
+                zipName = os.path.basename(path) if relPath else 'archive'
+                return stream_zipped_dir(path, zipName)
+
+        entries = {'dirs': {}, 'files': {}}
         for e in os.listdir(path):
             e_path = os.path.join(path, e)
-            data=dict()
+
+            if app.exclude and (app.exclude.match(e) or os.path.isdir(e_path) and app.exclude.match(e + os.sep)):
+                app.logger.debug("Excluding element: '{0}'".format(e))
+                continue
+
             if os.path.isdir(e_path):
-                if app.config['FOLDER_SIZE']:
-                    size, files_num = get_folder_size(e_path)
-                else:
-                    size = None;
-                    files_num = None;
-                data['size'] = size;
-                data['file_num'] = files_num;
-                if app.config['LAST_MODIFIED']:
-                    data['mtime'] = get_mtime(e_path)
-                entries['dirs'][e] = data
+                entries['dirs'][e] = get_folder_infos(e_path, recursive=app.config['FOLDER_SIZE'])
             elif os.path.isfile(e_path):
-                data['size'] = get_file_size(e_path)
-                data['mime'] = get_file_mimetype(e_path)
-                if app.config['LAST_MODIFIED']:
-                    data['mtime'] = get_mtime(path)
-                entries['files'][e] = data
+                entries['files'][e] = get_file_infos(e_path)
             else:
                 app.logger.debug('Skipping unknown element: {}'.format(e))
-        return render_template('template.html', entries=entries, relPath=relPath)
+        relDirs = [f for f in relPath.split(os.sep) if f]
+        return render_template('template.html', entries=entries, relPath=relPath, relDirs=relDirs)
 
     @app.errorhandler(OSError)
     def oserror_handler(e):
@@ -81,7 +95,16 @@ def create_app(conf={}):
             app.logger.exception(e)
         else:
             app.logger.error(e)
-        return render_template('error.html', message=e.strerror, code=403), 403
+
+        if e.errno in [errno.ENOENT, errno.ENOTDIR]:
+            # no such file or directory
+            errCode = 404
+        elif e.errno == errno.EACCES:
+            # permission denied
+            errCode = 403
+        else:
+            errCode = 500
+        return render_template('error.html', message=e.strerror, code=errCode), errCode
 
     return app
 

@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pydirl',
-    version='0.1.2',
+    version='0.2',
     description='Quick file sharing solution',
     license='GPLv3',
     url='https://github.com/ael-code/pydirl',
@@ -16,7 +16,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
-    entry_points={'console_scripts': [ 'pydirl=pydirl.cli:pydirl']},
+    entry_points={'console_scripts': ['pydirl=pydirl.cli:pydirl']},
     classifiers=[
         'Development Status :: 4 - Beta',
         'Framework :: Flask',

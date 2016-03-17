@@ -1,3 +1,6 @@
+table.table{
+    margin-bottom: 10px;
+}
 th.icon{
    width:1px;
 }
@@ -16,10 +19,20 @@ td.size{
    text-align:right;
 }
 
-td.toolbox a i{
+a.download-button i{
    color: hsl(0, 0%, 72%);
 }
 
-td.toolbox a i:hover{
+a.download-button i:hover{
    color: hsl(0, 0%, 39%);
+}
+
+#alert-message{
+    margin-top: 37px;
+}
+
+#directory-stats{
+   color: hsl(0, 0%, 50%);
+   margin-left: 10px;
+   margin-bottom: 20px;
 }

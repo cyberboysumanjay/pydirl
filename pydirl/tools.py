@@ -4,6 +4,7 @@ from .files_utils import directory_to_zipstream
 
 logger = logging.getLogger('pydirl')
 
+
 def stream_zipped_dir(path, zipname):
     z = directory_to_zipstream(path)
     response = Response(z, mimetype='application/zip')
@@ -40,8 +41,8 @@ def gevent_run(app, address, port, debugger=False, reloader=False):
         logger = logging.getLogger('pydirl')
         logger.info('Listening on http://{}:{}/'.format(address, port))
         server_params = dict()
-        #starting from gevent version 1.1b1 we can pass custom logger to gevent
-        if version_info[:2] >= (1,1):
+        # starting from gevent version 1.1b1 we can pass custom logger to gevent
+        if version_info[:2] >= (1, 1):
             server_params['log'] = logger
         http_server = WSGIServer((address, port), run_app, **server_params)
         http_server.serve_forever()
