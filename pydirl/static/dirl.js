@@ -11,11 +11,12 @@ function populate_table(entries){
             h_size = null
         else
             h_size = human_readable_size(dirs[dir]['size'])
+        url = encodeURIComponent(dir+'/');
         append_table_element(dir,
-                             dir+'/',
+                             url,
                              'glyphicon glyphicon-folder-open',
                              size=h_size,
-                             downloadUrl=dir+'/?download=true');
+                             downloadUrl=url+'?download=true');
         n_dirs += 1;
     }
 
@@ -24,8 +25,9 @@ function populate_table(entries){
     var n_files = 0;
     for( var file in files ){
         h_size = human_readable_size(files[file]['size'])
+        url = encodeURIComponent(file);
         append_table_element(file,
-                             file,
+                             url,
                              'glyphicon glyphicon-unchecked',
                              h_size);
         n_files += 1;
@@ -90,7 +92,7 @@ function populate_breadcrumb(relDirs){
     else{
         for (var i = 0; i < relDirs.length; i++) {
             dir = relDirs[i];
-            currHref += (dir + '/');
+            currHref += (encodeURIComponent(dir) + '/');
             if(i === relDirs.length-1)
                 breadcrumb.append('<li class="active">'+dir+'</li>');
             else
