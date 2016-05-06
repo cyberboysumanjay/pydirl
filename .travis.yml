@@ -14,10 +14,15 @@ matrix:
     include:
         - python: 2.7
           env: TEST_SUITE=flake
+        - python: 2.7
+          env: TEST_SUITE=jshint
+
 install:
   - 'if [[ $TEST_SUITE == flake ]] ; then pip install flake8; return $?; fi'
   - 'if [[ $TEST_SUITE == nose ]] ; then python setup.py install; return $?; fi'
+  - 'if [[ $TEST_SUITE == jshint ]] ; then npm install -g jshint; return $?; fi'
 
 script:
   - 'if [[ $TEST_SUITE == flake ]] ; then flake8; return $?; fi'
   - 'if [[ $TEST_SUITE == nose ]] ; then nosetests; return $?; fi'
+  - 'if [[ $TEST_SUITE == jshint ]] ; then jshint ./pydirl; return $?; fi'
