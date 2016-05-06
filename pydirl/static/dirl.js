@@ -1,16 +1,16 @@
-var suffix = ['B', 'KB','MB', 'GB', 'TB', 'PB']
+var suffix = ['B', 'KB','MB', 'GB', 'TB', 'PB'];
 
 function populate_table(entries){
     var table = $('table').first();
 
     //dirs
-    dirs = entries['dirs'];
+    dirs = entries.dirs;
     var n_dirs = 0;
     for( var dir in dirs ){
-        if(dirs[dir]['size'] === null)
-            h_size = null
+        if(dirs[dir].size === null)
+            h_size = null;
         else
-            h_size = human_readable_size(dirs[dir]['size'])
+            h_size = human_readable_size(dirs[dir].size);
         url = encodeURIComponent(dir+'/');
         append_table_element(dir,
                              url,
@@ -21,10 +21,10 @@ function populate_table(entries){
     }
 
     //files
-    files = entries['files']
+    files = entries.files;
     var n_files = 0;
     for( var file in files ){
-        h_size = human_readable_size(files[file]['size'])
+        h_size = human_readable_size(files[file].size);
         url = encodeURIComponent(file);
         append_table_element(file,
                              url,
@@ -45,7 +45,7 @@ function populate_table(entries){
 
 function append_table_element(name, url, icon_class, size, downloadUrl){
     var row = $('#template #table-row tr').first().clone();
-    row.find('.icon i').first().addClass(icon_class)
+    row.find('.icon i').first().addClass(icon_class);
     row_name = row.find('.name a').first();
     row_name.text(name);
     row_name.attr('href', url);
@@ -53,8 +53,8 @@ function append_table_element(name, url, icon_class, size, downloadUrl){
         row.find('.size').first().text(size);
     if(downloadUrl){
         download_button = $('#template a.download-button').first().clone();
-        download_button.attr('href', downloadUrl)
-        download_button.appendTo(row.find('.toolbox'))
+        download_button.attr('href', downloadUrl);
+        download_button.appendTo(row.find('.toolbox'));
     }
     row.appendTo('table tbody');
 }
@@ -88,7 +88,7 @@ function populate_breadcrumb(relDirs){
     var currDir = 'Home';
     breadcrumb.append(lidir(currHref, currDir));
     if(relDirs.length === 0)
-        breadcrumb.append(' <a class="download-button" href="/?download=True"><i class="glyphicon glyphicon-download"></i></a>')
+        breadcrumb.append(' <a class="download-button" href="/?download=True"><i class="glyphicon glyphicon-download"></i></a>');
     else{
         for (var i = 0; i < relDirs.length; i++) {
             dir = relDirs[i];
@@ -96,7 +96,7 @@ function populate_breadcrumb(relDirs){
             if(i === relDirs.length-1)
                 breadcrumb.append('<li class="active">'+dir+'</li>');
             else
-                breadcrumb.append(lidir(currHref, dir))
+                breadcrumb.append(lidir(currHref, dir));
         }
     }
 }
@@ -114,7 +114,7 @@ function populate_stats(n_dirs, n_files){
     else if(n_files > 1)
         filesStat = n_files + " files";
     if(n_dirs > 0 && n_files > 0)
-        sep = ', '
+        sep = ', ';
     $('p#directory-stats small').first().text(dirsStat + sep + filesStat);
 }
 populate_breadcrumb(relDirs);
