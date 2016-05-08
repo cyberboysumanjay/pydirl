@@ -32,7 +32,7 @@ def get_mtime(path):
 
 
 def directory_to_zipstream(path):
-    z = zipstream.ZipFile(mode='w', compression=zipstream.ZIP_DEFLATED)
+    z = zipstream.ZipFile(mode='w', compression=zipstream.ZIP_DEFLATED, allowZip64=True)
     for root, dirs, files in os.walk(path):
         for file in files:
             absPath = os.path.join(root, file)
