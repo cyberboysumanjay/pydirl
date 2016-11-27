@@ -8,7 +8,7 @@ setup(
     description='Quick file sharing solution',
     license='GPLv3',
     url='https://github.com/ael-code/pydirl',
-    install_requires=['flask-bootstrap',
+    install_requires=['flask-bootstrap < 4',
                       'flask',
                       'gevent <= 1.1',  # last version that support pyhton 2.6
                       'click',
