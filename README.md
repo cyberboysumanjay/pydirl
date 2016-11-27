@@ -15,18 +15,28 @@ This is an improoved version with the following features:
 ## Usage
 
  - Share the current working directory:
-   ```pydirl```
+   ```
+   pydirl
+   ```
 
  - Share the current working directory on custom port:
-   ```pydirl -p 1235```
+   ```
+   pydirl -p 1235
+   ```
 
  - Share a specific subtree:
-   ```pydirl /path/to/the/root/```
+   ```
+   pydirl /path/to/the/root/
+   ```
 
  - Do not show hidden file:
-   ```pydirl --exclude="^\."```
+   ```
+   pydirl --exclude="^\."
+   ```
 
  - Single file mode: share a single file
-   ```pydirl ./my_file.ext```
+   ```
+   pydirl ./my_file.ext
+   ```
 
 Once the server is up and running you can use a browser to navigate the shared subtree, download files and entire folders.
