@@ -10,7 +10,7 @@ setup(
     url='https://github.com/ael-code/pydirl',
     install_requires=['flask-bootstrap',
                       'flask',
-                      'gevent',
+                      'gevent <= 1.1',  # last version that support pyhton 2.6
                       'click',
                       'zipstream'],
     packages=find_packages(),
