@@ -1,15 +1,31 @@
 import logging
+import os
 from flask import Response
 from .files_utils import directory_to_zipstream
 
 logger = logging.getLogger('pydirl')
 
 
-def stream_zipped_dir(path, zipname):
+def stream_zipped_dir(path, zipname=None):
+    if zipname is None:
+        zipname = basename(path)
+        if zipname:
+            zipname += '.zip'
     z = directory_to_zipstream(path)
     response = Response(z, mimetype='application/zip')
-    response.headers['Content-Disposition'] = 'attachment; filename={}.{}'.format(zipname, 'zip')
+    response.headers['Content-Disposition'] = 'attachment; filename="{0}"'.format(zipname)
     return response
+
+
+def basename(path):
+    """Returns the basename of this path
+
+    /my/path/ -> path
+    /my/path/. -> path
+    """
+    path = os.path.normpath(path)
+    path = path.rstrip('/')
+    return os.path.basename(path)
 
 
 def init_loggers(logLevel=logging.WARNING, logNames=None):
