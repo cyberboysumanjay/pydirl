@@ -69,7 +69,7 @@ def create_app(conf={}):
             if relPath and relPath[-1] != '/':
                 return redirect(relPath + '/', code=302)
             elif 'download' in request.args:
-                return stream_zipped_dir(path)
+                return stream_zipped_dir(path, exclude=app.exclude)
 
         entries = {'dirs': {}, 'files': {}}
         for e in os.listdir(path):

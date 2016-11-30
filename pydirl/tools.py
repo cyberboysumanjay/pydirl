@@ -6,12 +6,12 @@ from .files_utils import directory_to_zipstream
 logger = logging.getLogger('pydirl')
 
 
-def stream_zipped_dir(path, zipname=None):
+def stream_zipped_dir(path, zipname=None, exclude=None):
     if zipname is None:
         zipname = basename(path)
         if zipname:
             zipname += '.zip'
-    z = directory_to_zipstream(path)
+    z = directory_to_zipstream(path, exclude=exclude)
     response = Response(z, mimetype='application/zip')
     response.headers['Content-Disposition'] = 'attachment; filename="{0}"'.format(zipname)
     return response
