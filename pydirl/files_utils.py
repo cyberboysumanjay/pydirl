@@ -35,7 +35,7 @@ def directory_to_zipstream(path, exclude=None):
     z = zipstream.ZipFile(mode='w', compression=zipstream.ZIP_DEFLATED, allowZip64=True)
     for root, dirs, files in os.walk(path):
         if exclude and exclude.match(os.path.relpath(root, path) + os.sep):
-            logger.debug("Excluding element: '{0}'".format(file))
+            logger.debug("Excluding element: '{0}'".format(root))
             continue
         for file in files:
             absPath = os.path.join(root, file)
