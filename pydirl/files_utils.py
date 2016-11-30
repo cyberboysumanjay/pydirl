@@ -39,14 +39,14 @@ def directory_to_zipstream(path, exclude=None):
             continue
         for file in files:
             absPath = os.path.join(root, file)
+            if exclude and exclude.match(file):
+                logger.debug("Excluding element: '{0}'".format(file))
+                continue
             if not os.path.exists(absPath):
                 logger.debug('Skipping non existing element: {}'.format(absPath))
                 continue
             if not (os.path.isfile(absPath) or os.path.isdir(absPath)):
                 logger.debug('Skipping unknown element: {}'.format(absPath))
-                continue
-            if exclude and exclude.match(file):
-                logger.debug("Excluding element: '{0}'".format(file))
                 continue
             z.write(absPath, os.path.relpath(absPath, path))
     return z
