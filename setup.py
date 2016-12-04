@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pydirl',
-    version='0.3',
+    version='0.3.1',
     description='Quick file sharing solution',
     license='GPLv3',
     url='https://github.com/ael-code/pydirl',
