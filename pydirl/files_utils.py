@@ -31,11 +31,17 @@ def get_mtime(path):
     return os.path.getmtime(path)
 
 
-def directory_to_zipstream(path):
+def directory_to_zipstream(path, exclude=None):
     z = zipstream.ZipFile(mode='w', compression=zipstream.ZIP_DEFLATED, allowZip64=True)
     for root, dirs, files in os.walk(path):
+        if exclude and exclude.match(os.path.relpath(root, path) + os.sep):
+            logger.debug("Excluding element: '{0}'".format(root))
+            continue
         for file in files:
             absPath = os.path.join(root, file)
+            if exclude and exclude.match(file):
+                logger.debug("Excluding element: '{0}'".format(file))
+                continue
             if not os.path.exists(absPath):
                 logger.debug('Skipping non existing element: {}'.format(absPath))
                 continue
