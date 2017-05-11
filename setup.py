@@ -10,7 +10,7 @@ setup(
     url='https://github.com/ael-code/pydirl',
     install_requires=['flask-bootstrap < 4',
                       'flask',
-                      'gevent < 1.2',  # they dropped support for python 2.6
+                      'gevent',
                       'click',
                       'zipstream'],
     packages=find_packages(),
