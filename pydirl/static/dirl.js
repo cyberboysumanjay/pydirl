@@ -11,7 +11,7 @@ function populate_table(entries){
             h_size = null;
         else
             h_size = human_readable_size(dirs[dir].size);
-        url = encodeURIComponent(dir+'/');
+        url = encodeURIComponent(dir) + '/';
         append_table_element(dir,
                              url,
                              'glyphicon glyphicon-folder-open',
