@@ -41,7 +41,10 @@ def init_loggers(logLevel=logging.WARNING, logNames=None):
 
 
 def gevent_run(app, address, port, debugger=False, reloader=False):
-    from gevent.wsgi import WSGIServer
+    try:
+        from gevent.wsgi import WSGIServer
+    except ImportError:
+        from gevent.pywsgi import WSGIServer
     from werkzeug.debug import DebuggedApplication
     import gevent.monkey
     gevent.monkey.patch_all()
